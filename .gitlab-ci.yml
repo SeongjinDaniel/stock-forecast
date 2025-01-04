@@ -56,3 +56,4 @@ deploy:
     url: http://${AWS_INSTANCE_IP}:8080
   only:
     - main 
+    
