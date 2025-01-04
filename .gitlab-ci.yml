@@ -39,13 +39,21 @@ deploy:
     - apt-get install -y openssh-client
     - mkdir -p ~/.ssh
     - eval $(ssh-agent -s)
+    - chmod 400 $SSH_PRIVATE_KEY
+    - ssh-add $SSH_PRIVATE_KEY
     - echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config
-    - echo "$SSH_PRIVATE_KEY" | tr -d '\r' > ~/.ssh/id_rsa
-    - chmod 600 ~/.ssh/id_rsa
-    - ssh-add ~/.ssh/id_rsa
   script:
+    # Docker 설치 확인 및 필요시 설치
+    - |
+      ssh ${AWS_INSTANCE_USER}@${AWS_INSTANCE_IP} "if ! command -v docker &> /dev/null; then
+        sudo yum update -y
+        sudo yum install -y docker
+        sudo service docker start
+        sudo usermod -a -G docker ec2-user
+        sudo systemctl enable docker
+      fi"
     # AWS 인스턴스에 접속하여 배포
-    - ssh ${AWS_INSTANCE_USER}@${AWS_INSTANCE_IP} "docker login registry.gitlab.com -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD"
+    - ssh ${AWS_INSTANCE_USER}@${AWS_INSTANCE_IP} "docker login registry.gitlab.com -u $DEPLOY_TOKEN_USERNAME -p $DEPLOY_TOKEN_PASSWORD"
     - ssh ${AWS_INSTANCE_USER}@${AWS_INSTANCE_IP} "docker pull ${IMAGE_NAME}:${CI_COMMIT_SHA}"
     - ssh ${AWS_INSTANCE_USER}@${AWS_INSTANCE_IP} "docker stop ${CONTAINER_NAME} || true"
     - ssh ${AWS_INSTANCE_USER}@${AWS_INSTANCE_IP} "docker rm ${CONTAINER_NAME} || true"
