@@ -2,8 +2,8 @@
 FROM openjdk:21-jdk AS builder
 WORKDIR /app
 
-# 필요한 유틸리티 설치
-RUN apt-get update && apt-get install -y findutils
+# Alpine Linux의 패키지 매니저 사용
+RUN microdnf install findutils
 
 COPY . .
 RUN chmod +x ./gradlew
@@ -22,6 +22,14 @@ ENV SPRING_PROFILES_ACTIVE=prod \
     SERVER_PORT=8080
 
 # 런타임 환경변수 설정 (CI/CD에서 주입)
+ARG DB_HOST
+ARG DB_PORT
+ARG DB_NAME
+ARG DB_USER
+ARG DB_PASSWORD
+ARG APT_TRADE_SERVICE_KEY
+ARG APT_LOTTO_SERVICE_KEY
+
 ENV DB_HOST=${DB_HOST} \
     DB_PORT=${DB_PORT} \
     DB_NAME=${DB_NAME} \

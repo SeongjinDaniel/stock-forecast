@@ -16,7 +16,16 @@ build:
   before_script:
     - docker login registry.gitlab.com -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD
   script:
-    - docker build -t $IMAGE_NAME:$CI_COMMIT_SHA .
+    - >
+      docker build 
+      --build-arg DB_HOST=${DB_HOST}
+      --build-arg DB_PORT=${DB_PORT}
+      --build-arg DB_NAME=${DB_NAME}
+      --build-arg DB_USER=${DB_USER}
+      --build-arg DB_PASSWORD=${DB_PASSWORD}
+      --build-arg APT_TRADE_SERVICE_KEY=${APT_TRADE_SERVICE_KEY}
+      --build-arg APT_LOTTO_SERVICE_KEY=${APT_LOTTO_SERVICE_KEY}
+      -t $IMAGE_NAME:$CI_COMMIT_SHA .
     - docker push $IMAGE_NAME:$CI_COMMIT_SHA
   only:
     - main
