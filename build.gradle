@@ -1,0 +1,38 @@
+plugins {
+	id 'java'
+	id 'org.springframework.boot' version '3.4.0'
+	id 'io.spring.dependency-management' version '1.1.6'
+}
+
+group = 'com.banbu'
+version = '0.0.1-SNAPSHOT'
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+//	implementation 'mysql:mysql-connector-java'
+
+	// https://mvnrepository.com/artifact/com.mysql/mysql-connector-j
+	implementation group: 'com.mysql', name: 'mysql-connector-j', version: '9.1.0'
+//	implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
+	implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-openfeign', version: '4.2.0'
+
+	// Swagger(Spring 3.x.x 이상부터 SpringFox 대신, SpringDoc)
+	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.0.2'
+	// https://mvnrepository.com/artifact/com.fasterxml.jackson.dataformat/jackson-dataformat-xml
+	implementation group: 'com.fasterxml.jackson.dataformat', name: 'jackson-dataformat-xml', version: '2.17.2'
+
+
+	compileOnly 'org.projectlombok:lombok'
+	annotationProcessor 'org.projectlombok:lombok'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+
+tasks.named('test') {
+	useJUnitPlatform()
+}

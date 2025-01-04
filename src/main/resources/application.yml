@@ -1,0 +1,23 @@
+spring:
+  application:
+    name: jh
+  datasource:
+    url: jdbc:mysql://localhost:3306/banbu
+    username: bb
+    password: banbu
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    hibernate:
+      ddl-auto: none # 개발 단계에서는 update, 운영 환경에서는 none 또는 validate 사용 권장
+    database-platform: org.hibernate.dialect.MySQLDialect
+  sql:
+    init:
+      mode: always # 스키마 및 데이터 초기화 활성화
+
+server:
+  port: 8080 # 서버 포트 (기본값 유지 또는 필요 시 변경)
+
+apt:
+  trade:
+    service:
+      key: a24q03IcPlW3NkM6JM8trI8XKcelV8gy8Sz0Af%2BK6nRyMz5%2BZfRR7Fz4y2PKqjyJXK2lMbSELum6nvJHkPWbVg%3D%3D
