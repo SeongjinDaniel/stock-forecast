@@ -1,12 +1,12 @@
 # Build stage
-FROM container-registry.oracle.com/java/openjdk:23-jdk as builder
+FROM container-registry.oracle.com/java/openjdk:21-jdk AS builder
 WORKDIR /app
 COPY . .
 RUN chmod +x ./gradlew
 RUN ./gradlew clean bootJar
 
 # Run stage
-FROM container-registry.oracle.com/java/openjdk:23
+FROM container-registry.oracle.com/java/openjdk:21
 WORKDIR /app
 
 # 타임존 설정
@@ -20,11 +20,9 @@ USER spring:spring
 # 빌드된 jar 파일 복사
 COPY --from=builder /app/build/libs/*.jar app.jar
 
-# 컨테이너 실행 시 실행될 명령
 ENTRYPOINT ["java", "-jar", \
     "-Dspring.profiles.active=${SPRING_PROFILES_ACTIVE:prod}", \
     "-Duser.timezone=Asia/Seoul", \
     "app.jar"]
 
-# 헬스체크를 위한 포트 노출
 EXPOSE 8080
