@@ -59,10 +59,12 @@ deploy:
         -e DB_NAME=${DB_NAME} \
         -e DB_USER=${DB_USER} \
         -e DB_PASSWORD=${DB_PASSWORD} \
+        -e APT_TRADE_SERVICE_KEY=${APT_TRADE_SERVICE_KEY} \
+        -e APT_LOTTO_SERVICE_KEY=${APT_LOTTO_SERVICE_KEY} \
         ${IMAGE_NAME}:${CI_COMMIT_SHA}"
   environment:
     name: production
     url: http://${AWS_INSTANCE_IP}:8080
   only:
-    - main 
+    - main
     
