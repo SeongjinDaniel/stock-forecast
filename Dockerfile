@@ -1,6 +1,10 @@
 # Build stage
 FROM openjdk:21-jdk AS builder
 WORKDIR /app
+
+# 필요한 유틸리티 설치
+RUN apt-get update && apt-get install -y findutils
+
 COPY . .
 RUN chmod +x ./gradlew
 RUN ./gradlew clean bootJar
@@ -17,16 +21,14 @@ RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 ENV SPRING_PROFILES_ACTIVE=prod \
     SERVER_PORT=8080
 
-# DB 관련 환경변수 (실제 값은 런타임에 주입)
-ENV DB_HOST='' \
-    DB_PORT='' \
-    DB_NAME='' \
-    DB_USER='' \
-    DB_PASSWORD=''
-
-# API 관련 환경변수 (실제 값은 런타임에 주입)
-ENV APT_TRADE_SERVICE_KEY='' \
-    APT_LOTTO_SERVICE_KEY=''
+# 런타임 환경변수 설정 (CI/CD에서 주입)
+ENV DB_HOST=${DB_HOST} \
+    DB_PORT=${DB_PORT} \
+    DB_NAME=${DB_NAME} \
+    DB_USER=${DB_USER} \
+    DB_PASSWORD=${DB_PASSWORD} \
+    APT_TRADE_SERVICE_KEY=${APT_TRADE_SERVICE_KEY} \
+    APT_LOTTO_SERVICE_KEY=${APT_LOTTO_SERVICE_KEY}
 
 RUN groupadd -r spring && useradd -r -g spring spring
 USER spring:spring
